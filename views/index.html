@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="x-access-token" content="{{token}}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Blog</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div id="header"></div>
+
+<div class="container">
+	<div id="response" style="display: none;"></div>
+	<div id="main" class="col-xs-12 col-sm-12 col-md-10 col-lg-10"></div>
+	<div id="archive-wrapper" class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></div>
+	<div class="clearfix"></div>
+	<div id="pagination-wrapper">
+		<div id="pagination-nav" class="text-center"></div> 
+	</div>
+</div>
+<!-- Templates -->
+<script id="header-template" type="text/template">
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		      	  	<span class="sr-only">Toggle navigation</span>
+		      	  	<span class="icon-bar"></span>
+		      	  	<span class="icon-bar"></span>
+		      	  	<span class="icon-bar"></span>
+		      	</button>
+		      	<a class="navbar-brand" href="/#">Moj Blog</a>
+		    </div>
+		    <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+				 	<li id="home" class="active"><a href="/#">Posts</a></li>
+				 	<li id="about"><a href="/#about">About</a></li>
+				 	
+				 		
+				 	<% if (loggedIn === true) { %> 
+				 		<li id="add"><a href="/#add">Add New Post</a></li>
+				 		<li id="logout"><a href="#" id="logout_btn">Logout</a></li>
+				 	<% } else { %>
+				 		<li id="admin"><a href="/#admin/login">Login</a></li>
+				 	<% } %>
+				</ul>
+				<form class="navbar-form navbar-right" role="search">
+		        	<div class="form-group">
+		        	  	<input type="text" id="search_txt" class="form-control" placeholder="Search">
+		        	</div>
+		        	<button type="submit" id="search_btn" class="btn btn-primary">Search</button>
+		      </form>
+		    </div>
+		</div>  
+	</nav>
+</script>
+
+<script id="post-template" type="text/template">
+	<div class="pull-left">
+		<h3>
+			<span class="label label-info date-span"><%= moment(post.createdOn).format("DD/MM/YYYY") %></span>
+			<a href="#posts/view/<%= post.slug %>"><%= post.title %></a>
+		</h3>
+	</div>
+	<div class="pull-right">
+		<% if (loggedIn === true) { %>
+			<a href="#posts/edit/<%= post._id %>" class="btn btn-success edit-post">Edit</a>
+			<a href="#posts/delete/<%= post._id %>" class="btn btn-danger delete-post">Delete</a>
+		<% } %>
+	</div>
+	<div class="clearfix"></div><br/>
+	<div>
+		<div><span class="badge"><%= post.comments.length %> Comments</span> </div>
+		<%= post.content %>
+	</div>
+</script>
+
+<script id="post-view-template" type="text/template">
+	<div class="pull-left">
+		<h1>
+			<span class="label label-info date-span">
+				<%= moment(post.createdOn).format("DD/MM/YYYY") %>
+			</span> &nbsp;
+			<%= post.title %>
+		</h1>
+	</div>
+	<div class="pull-right">
+		<a href="javascript:history.back();" class="btn btn-default">Go Back</a>
+		<% if (loggedIn === true) { %>
+			<a href="#posts/edit/<%= post._id %>" class="btn btn-success edit-post">Edit</a>
+			<a href="#posts/delete/<%= post._id %>" class="btn btn-danger delete-post">Delete</a>
+		<% } %>
+	</div>
+	<div class="clearfix"></div>
+	<br/>
+	<div><%= post.content %></div>
+	<input type="hidden" id="post_id" value="<%= post._id %>" />
+	
+	<hr/>
+	<div id="comments-holder" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
+</script>
+
+<script id="post-form-template" type="text/template">
+	<h1><%= headingTitle %></h1>
+	<hr/>
+	<form>
+		<div class="form-group">
+			<label for="title">Title: </label>
+			<input type="text" class="form-control" name="title" id="title" value="<%= model.title %>"/>
+		</div>
+		<div class="form-group">
+			<label for="slug">Slug: </label>
+			<input type="text" disabled="disabled" class="form-control" name="slug" id="slug" value="<%= model.slug %>"/>
+		</div>
+		<div class="form-group">
+			<label for="content">Content: </label>
+			<textarea class="form-control" rows="30" name="content" id="content" name="content"><%= model.content %></textarea>
+		</div>
+		<button type="submit" id="add_post" class="btn btn-primary">Save</button> 
+		<a href="javascript:history.back();" class="btn btn-default">Cancel</a>
+	</form>
+</script>
+
+<script id="about-template" type="text/template">
+	<h1>About Strana</h1>
+	<hr/>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere explicabo sapiente, qui tempora voluptate laudantium, saepe, itaque accusamus, quam repellat consequuntur magni expedita cumque quidem alias ab sunt laboriosam soluta!</p>
+	<a href="javascript:history.back();" class="btn btn-default">Go Back</a>
+</script>
+
+<script id="pagination-template" type="text/template">
+	<ul class="pagination">
+		<% if (currentLinkNumber != 1) { %>
+			<li ><a class="page" rel="<%= (currentLinkNumber - 1) %>" href="#<%= pageUrl %>/page/<%= (currentLinkNumber - 1) %>" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+		<% } else { %>
+			<li class="disabled"><span aria-hidden="true">&laquo;</span></li>
+		<% } %>
+		<% for (var i = pageMin; i <= pageMax; i++) { %>
+			<% if (i == currentLinkNumber) { %>
+				<li class="active"><a rel="<%= i %>" class="page" href="#<%= pageUrl %>/page/<%= i %>"><%= i %></a></li>
+			<% } else { %>
+				<li><a class="page" rel="<%= i %>" href="#<%= pageUrl %>/page/<%= i %>"><%= i %></a></li>
+			<% }} %>
+		<% if (currentLinkNumber < numOfPages) { %>
+			<li><a class="page" rel="<%= (currentLinkNumber + 1) %>" href="#<%= pageUrl %>/page/<%= (currentLinkNumber + 1) %>" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+		<% } else { %>
+			<li class="disabled"><span aria-hidden="true">&raquo;</span></li>
+		<% } %>
+	</ul> 
+</script>
+
+<script id="admin-login-template" type="text/template">
+	<h2 class="text-center">Please login </h2> <hr />
+	<form role="form" class="form-horizontal contact-form">
+	    <div class="form-group">
+	        <label for="username">Username:</label>
+			<input type="text" id="username" class="form-control">
+	    </div>
+	    <div class="form-group">
+	        <label for="password">Password:</label>
+			<input type="password" id="password" class="form-control">
+	    </div>
+	    <div class="form-group">
+	        <button type="submit" id="login_btn" class="btn btn-primary btn-lg">Login</button>
+	        <a href="javascript:history.back();" class="btn btn-default btn-lg">Cancel</a>
+	    </div>
+	</form>
+</script>
+
+<script id="comments-template" type="text/template">
+
+		<h2 class="text-center">Add Comment</h2> <hr />
+		<from role="form" class="form-horizontal contact-form">
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+					<input type="text" id="name" class="form-control" placeholder="Name">
+			    </div>
+			    <div id="email-holder" class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+					<input type="email" id="email" class="form-control" placeholder="Email">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<textarea id="commentText" class="form-control" placeholder="Comment..."></textarea>
+			    </div>
+			    <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			        <button type="submit" id="submit_comment_btn" class="btn btn-primary">Submit Comment</button>
+			        <a href="javascript:history.back();" class="btn btn-default">Go Back</a>
+			    </div>
+			</div>
+		</from>
+
+		<h3 class="text-center">Comments: </h3>
+		<br/>
+
+		<ul id="comment-list"></ul>
+
+</script>
+
+<script id="comment-template" type="text/template">
+	<div class="comment-wrapper well">
+		<div class="comment-header-wrapper">
+			<span class="comment-name"><%- name %></span>
+			<span class="comment-date"><%- moment(commentDate).format("DD/MM/YYYY") %></span>
+		</div>
+		<div class="comment-text-wrapper">
+			Said: <%- commentText %>
+		</div>
+	</div>
+</script>
+
+<script id="archive-template" type="text/template">
+	<h4>Archive:</h4>
+	<hr/>
+	<% templateData.forEach(function(data) { %>
+		<a href="#posts/archive/<%= data._id.year %>/<%= data._id.month %>">
+			<%= data._id.year %> <%= months[data._id.month - 1] %>
+		</a> 
+		(<span><%= data.count %></span>)
+		<br/>
+	<% }); %>
+</script>
+
+<script id="not-found-template" type="text/template">
+	<h1>Error 404 Not Found</h1>
+	<h3>The requested resource could not be found, please try something else</h3>
+	<a href="javascript:history.back();" class="btn btn-default">Go Back</a>
+</script>
+
+<!-- Libraries -->
+<script src="/js/lib/jquery.js"></script>	
+<script src="/js/lib/moment.js"></script>	
+<script src="/js/lib/js.cookie.js"></script>
+<script src="/js/lib/bootstrap.js"></script>
+<script src="/js/lib/underscore.js"></script>		
+<script src="/js/lib/backbone.js"></script>	
+<script src="/js/lib/backbone-associations.js"></script>	
+<script src="/js/lib/tinymce/tinymce.min.js"></script>
+<!-- Routers -->
+<script src="/js/routers/router.js"></script>
+<!-- Models -->
+<script src="/js/models/comment.js"></script>
+<script src="/js/models/post.js"></script>	
+<!-- Collections -->
+<script src="/js/collections/posts.js"></script>	
+<!-- Views -->
+<script src="/js/views/posts-view.js"></script>	
+<script src="/js/views/header-view.js"></script>	
+<script src="/js/views/about-view.js"></script>
+<script src="/js/views/pagination-view.js"></script>
+<script src="/js/views/admin-view.js"></script>
+<script src="/js/views/archive-view.js"></script>
+<script src="/js/views/comment-view.js"></script>
+<script src="/js/views/404-view.js"></script>
+<!-- App Start -->
+<script src="/js/app.js"></script>	
+
+</body>
+</html>
