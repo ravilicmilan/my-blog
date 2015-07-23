@@ -35,17 +35,14 @@ app.Views.AdminLogin = Backbone.View.extend({
 				console.log(data);
 				app.Auth.user = data.user;
 				app.Auth.loggedIn = true;
-				// $('meta[name="x-access-token"]').attr('content', data.token);
 				
 				app.setToken(data.token);
-				
+				app.showMessage('response-success', 'You have successfully logged in!', 1500);
 				app.router.navigate('', {trigger: true});
 				app.vent.trigger('admin:login', [app.router.headerView]);
 			},
 			error: function( jqXHR, textStatus, errorThrown) {
-				console.log(jqXHR);
-				console.log(textStatus);
-				console.log(errorThrown);
+				app.showMessage('response-error', 'Ooooops it appears you can log in', 3000);
 			}
 		});
 	}

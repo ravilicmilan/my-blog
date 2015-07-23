@@ -12,9 +12,6 @@ app.Views.PostView = Backbone.View.extend({
 	template: _.template($('#post-template').html()),
 
 	initialize: function (options) {
-		this.vent = options.vent;
-		this.on('admin:login', this);
-		this.on('admin:logout', this);
 		this.listenTo(this.model, 'change', this.render);
 		this.listenTo(this.model.get('comments'), 'add', this.render);
 	},
@@ -107,7 +104,7 @@ app.Views.FormView = Backbone.View.extend({
 	},
 
 	initialize: function(options) {
-		this.headingTitle = options.headingTitle;
+		this.headingTitle = options.headingTitle || '';
 		tinymce.editors = [];
 	},
 

@@ -23,9 +23,7 @@ app.Views.ArchiveView = Backbone.View.extend({
 				}));
 			},
 			error: function(jqXhr, response, options) {
-				console.log(jqXhr);
-				console.log(response);
-				console.log(options);
+				
 			}
 		});
 		

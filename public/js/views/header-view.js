@@ -37,14 +37,12 @@ app.Views.HeaderView = Backbone.View.extend({
 				app.Auth.user = '';
 				app.Auth.loggedIn = false;
 				app.removeToken();
+				app.showMessage('response-success', 'You have successfully logged out!', 1500);
 				app.router.navigate('', {trigger: true});
 				app.vent.trigger('admin:logout', [self, app.router.postsView]);
-				// document.location = '/'; // ne valja radi page reload
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				console.log(jqXHR);
-				console.log(textStatus);
-				console.log(errorThrown);
+				app.showMessage('response-error', 'You cannot logout if you are not logged in!', 3000);
 			}
 		});
 	},

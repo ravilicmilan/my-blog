@@ -29,7 +29,7 @@ app.Views.CommentsView = Backbone.View.extend({
 
 		this.collection.each(function(model) {
 			var commentView = new app.Views.CommentView({model: model});
-			self.$('#comment-list').append(commentView.render().el);
+			self.$('#comment-list').prepend(commentView.render().el);
 		});
 		return this;
 	},
@@ -54,9 +54,6 @@ app.Views.CommentsView = Backbone.View.extend({
 			},
 			error: function(jqXhr, response, options) {
 				app.showMessage('response-error', 'Error adding new comment ', 3000);
-				console.log(jqXhr);
-				console.log(response);
-				console.log(options);
 			}
 		});
 	}
