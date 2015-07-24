@@ -15,6 +15,18 @@ app.Routers.Router = Backbone.Router.extend({
 		'posts/archive/:year/:month/page/:num': 'archivePosts',
 	},
 
+	route: function(route, name, callback) {
+        var router = this;
+        if (!callback) callback = this[name];
+
+        var f = function() {
+            app.startOverlay()
+            callback.apply(router, arguments);
+            app.removeOverlay();
+        };
+        return Backbone.Router.prototype.route.call(this, route, name, f);
+    },
+
 	initializeTinyMCE: function() {
 		tinymce.init({
 		    selector: "textarea",
