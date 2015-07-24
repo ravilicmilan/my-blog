@@ -17,7 +17,6 @@ var getPosts = function(req, res, next) {
 
 	if (req.params.searchTerm) {
 		var searchParam = new RegExp(req.params.searchTerm, 'i');
-		searchParam.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '***');
 		query = { $or: [{title: searchParam}, {content: searchParam}] };
 	} else if (req.params.year && req.params.month) {
 		var month = req.params.month.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '***');
