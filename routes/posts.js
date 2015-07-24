@@ -16,10 +16,12 @@ var getPosts = function(req, res, next) {
 	}
 
 	if (req.params.searchTerm) {
-		query = { title: new RegExp(req.params.searchTerm, 'i') };
+		var searchParam = new RegExp(req.params.searchTerm, 'i');
+		searchParam.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '***');
+		query = { $or: [{title: searchParam}, {content: searchParam}] };
 	} else if (req.params.year && req.params.month) {
-		var month = req.params.month;
-		var year = req.params.year;
+		var month = req.params.month.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '***');
+		var year = req.params.year.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '***');
 		var startDate = new Date(year, month - 1, 1);
 		var endDate = new Date(year, month, 1);
 		query = {'createdOn': {$gte : startDate, $lt: endDate}};

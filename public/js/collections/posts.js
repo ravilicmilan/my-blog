@@ -30,21 +30,5 @@ app.Collections.Posts = Backbone.Collection.extend({
                 return '/posts/page/' + this.pageNum;
             return '/posts';
         }
-
-
-
-    	/*if (this.pageNum) {
-    		return '/posts/page/' + this.pageNum;
-    	} else if (this.searchTerm) {
-    		return '/posts/search/' + this.searchTerm;
-    	} else if (this.searchTerm && this.pageNum) {
-            return '/posts/search/' + this.searchTerm + '/page/' + this.pageNum;
-        } else if (this.year && this.month) {
-            return '/posts/archive/' + this.year + '/' + this.month;
-        } else if (this.year && this.month && this.pageNum) {
-            return '/posts/archive/' + this.year + '/' + this.month + '/page/' + this.pageNum;
-        } else {
-            return '/posts';
-        } */ 	
     }
 });

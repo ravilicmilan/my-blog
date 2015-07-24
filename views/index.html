@@ -33,7 +33,7 @@
 		      	  	<span class="icon-bar"></span>
 		      	  	<span class="icon-bar"></span>
 		      	</button>
-		      	<a class="navbar-brand" href="/#">Moj Blog</a>
+		      	<a class="navbar-brand" href="/#">My Blog</a>
 		    </div>
 		    <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
@@ -75,8 +75,10 @@
 	<div class="clearfix"></div><br/>
 	<div>
 		<div><span class="badge"><%= post.comments.length %> Comments</span> </div>
-		<%= post.content %>
+		<br/>
+		<div class="post-content-wrapper"><%= post.content %></div>
 	</div>
+	<div class="read-more-wrapper"><a class="read-more-btn" href="#posts/view/<%= post.slug %>">... Read more</a></div>
 </script>
 
 <script id="post-view-template" type="text/template">
@@ -126,9 +128,11 @@
 </script>
 
 <script id="about-template" type="text/template">
-	<h1>About Strana</h1>
+	<h1>About Page</h1>
 	<hr/>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere explicabo sapiente, qui tempora voluptate laudantium, saepe, itaque accusamus, quam repellat consequuntur magni expedita cumque quidem alias ab sunt laboriosam soluta!</p>
+	<p>
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere explicabo sapiente, qui tempora voluptate laudantium, saepe, itaque accusamus, quam repellat consequuntur magni expedita cumque quidem alias ab sunt laboriosam soluta!
+	</p>
 	<a href="javascript:history.back();" class="btn btn-default">Go Back</a>
 </script>
 
@@ -227,7 +231,7 @@
 
 <script id="not-found-template" type="text/template">
 	<h1>Error 404 Not Found</h1>
-	<h3>The requested resource could not be found, please try something else</h3>
+	<h3><%= message %></h3>
 	<a href="javascript:history.back();" class="btn btn-default">Go Back</a>
 </script>
 

@@ -53,15 +53,14 @@ app.Routers.Router = Backbone.Router.extend({
             $('#pagination-wrapper').show();
 
 		var posts = new app.Collections.Posts([], {pageNum: num});
-		if (!this.postsView || num !== this.num) {
-			this.num = num;
-			this.postsView = new app.Views.PostsView({collection: posts, vent: app.vent});
-		}
 		
 		$('#main').empty();
+
 		posts.fetch({
 			success: function(model, response, options) {
+				self.postsView = new app.Views.PostsView({collection: posts});
 				$('#main').append(self.postsView.render().el);
+
 
 				if (!self.archiveView) {
 					self.archiveView = new app.Views.ArchiveView();
@@ -76,7 +75,9 @@ app.Routers.Router = Backbone.Router.extend({
 				$('#pagination-wrapper').append(pagination.render().el);
 			},
 			error: function(model, response, options) {
-				var notFound = new app.Views.NotFound();
+				var notFound = new app.Views.NotFound({
+					message: model.message
+				});
 				$('#main').append(notFound.render().el);
 				$('#pagination-wrapper').hide();
 			}
@@ -102,6 +103,7 @@ app.Routers.Router = Backbone.Router.extend({
 			$('#main').append(viewPost.render().el);
 			$('#pagination-wrapper').hide();
 		});
+		this.headerView.selectMenu('home');
 	},
 
 	addNewPost: function() {
@@ -124,6 +126,7 @@ app.Routers.Router = Backbone.Router.extend({
 			$('#pagination-wrapper').hide();
 			self.initializeTinyMCE();
 		});
+		this.headerView.selectMenu('home');
 	},
 
 	adminLogin: function() {
@@ -165,8 +168,11 @@ app.Routers.Router = Backbone.Router.extend({
 				$('#pagination-wrapper').html(pagination.render().el);
 			}, 
 			error: function(model, response, options) {
-				var notFound = new app.Views.NotFound();
+				var notFound = new app.Views.NotFound({
+					message: 'There are no posts with this serach criteria: ' + searchTerm
+				});
 				$('#main').append(notFound.render().el);
+				$('#pagination-wrapper').hide();
 			}
 		});
 	},
@@ -202,8 +208,11 @@ app.Routers.Router = Backbone.Router.extend({
 				$('#pagination-wrapper').html(pagination.render().el);
 			}, 
 			error: function(model, response, options) {
-				var notFound = new app.Views.NotFound();
+				var notFound = new app.Views.NotFound({
+					message: 'There are no posts within this range: ' + year + '/' + month
+				});
 				$('#main').append(notFound.render().el);
+				$('#pagination-wrapper').hide();
 			}
 		});
 	}

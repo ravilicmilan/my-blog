@@ -28,10 +28,13 @@ body {  position: relative; }
 	margin-bottom: 5px;
 	max-height: 250px;
 	border-radius: 5px;
-	transition: all ease-in 0.3s;
 	overflow: hidden;
+	-webkit-transition: all ease-in 0.3s;
+	-moz-transition: all ease-in 0.3s;
+	-ms-transition: all ease-in 0.3s;
+	transition: all ease-in 0.3s;
 }
-.post-item:hover {
+.post-item:hover, .post-item:hover .read-more-btn {
 	background: #efefef;
 }
 #response {
@@ -76,6 +79,26 @@ body {  position: relative; }
 }
 #email-holder {
 	margin-left: 15px;
+}
+.read-more-wrapper {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+.read-more-btn {
+	padding: 3px;
+	padding-bottom: 6px;
+	background: #fcf8e3;
+	-webkit-transition: all ease-in 0.3s;
+	-moz-transition: all ease-in 0.3s;
+	-ms-transition: all ease-in 0.3s;
+	transition: all ease-in 0.3s; 
+}
+.read-more-btn:hover {
+	background: #efefef;
+}
+.post-content-wrapper {
+
 }
 
 @media (max-width: 768px) { 
