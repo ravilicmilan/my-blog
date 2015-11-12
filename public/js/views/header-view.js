@@ -18,11 +18,8 @@ app.Views.HeaderView = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (app.Auth.loggedIn === true) {
-			this.$el.html(this.template({loggedIn: true}));			
-		} else {
-			this.$el.html(this.template({loggedIn: false}));	
-		}
+		this.$el.html(this.template({loggedIn: app.Auth.loggedIn}));			
+
 		return this;
 	},
 
@@ -33,7 +30,6 @@ app.Views.HeaderView = Backbone.View.extend({
 			method: 'POST',
 			url: '/admin/logout',
 			success: function(data) {
-				console.log(data);
 				app.Auth.user = '';
 				app.Auth.loggedIn = false;
 				app.removeToken();

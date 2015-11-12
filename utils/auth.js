@@ -1,4 +1,4 @@
-var User = require('../models/db').User;
+var User = require('../models/user');
 
 module.exports = function(req, res, next) {
 	var token = req.headers['x-access-token']; 

@@ -17,17 +17,11 @@ app.Views.PostView = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (app.Auth.loggedIn === true) {
-			this.$el.html(this.template({
-				post: this.model.toJSON(),
-				loggedIn: true
-			}));
-		} else {
-			this.$el.html(this.template({
-				post: this.model.toJSON(),
-				loggedIn: false
-			}));
-		}
+		this.$el.html(this.template({
+			post: this.model.toJSON(),
+			loggedIn: app.Auth.loggedIn
+		}));
+
 		return this;
 	},
 
@@ -74,17 +68,11 @@ app.Views.ViewPost = Backbone.View.extend({
 	template: _.template($('#post-view-template').html()),
 
 	render: function() {
-		if (app.Auth.loggedIn === true) {
-			this.$el.html(this.template({
-				post: this.model.toJSON(),
-				loggedIn: true
-			}));
-		} else {
-			this.$el.html(this.template({
-				post: this.model.toJSON(),
-				loggedIn: false
-			}));
-		}
+		this.$el.html(this.template({
+			post: this.model.toJSON(),
+			loggedIn: app.Auth.loggedIn
+		}));
+
 		var comments = this.model.get('comments');
 		var commentsView = new app.Views.CommentsView({collection: comments});
 		this.$('#comments-holder').html(commentsView.render().el);
@@ -119,8 +107,9 @@ app.Views.FormView = Backbone.View.extend({
 	onKeyPress: function(e) {
 		if (e.which !== 13) { 
 			var string = $('#title').val();
+			
 			string = string.trim();
-			string = string.toLowerCase().replace(',.;:"\'[]{}<>/!@#$%^&*()_-=+', '').replace(/\s/g, '-');
+			string = string.toLowerCase().replace(/[^\w\s]|[_]|[)]/g, "").replace(/\s/g, '-');
 			
 			this.$('#slug').val(string);
 		}

@@ -32,7 +32,6 @@ app.Views.AdminLogin = Backbone.View.extend({
 			dataType: 'json',
 			data: postData,
 			success: function(data) {
-				console.log(data);
 				app.Auth.user = data.user;
 				app.Auth.loggedIn = true;
 				
@@ -42,7 +41,7 @@ app.Views.AdminLogin = Backbone.View.extend({
 				app.vent.trigger('admin:login', [app.router.headerView]);
 			},
 			error: function( jqXHR, textStatus, errorThrown) {
-				app.showMessage('response-error', 'Ooooops it appears you can log in', 3000);
+				app.showMessage('response-error', 'Wrong username or password', 3000);
 			}
 		});
 	}

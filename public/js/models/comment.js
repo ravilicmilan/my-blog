@@ -5,7 +5,6 @@ app.Models.Comment = Backbone.AssociatedModel.extend({
 	urlRoot: '/posts/comments',
 
 	setCommentUrl: function(postId) {
-	    // "this" is now our Model instance declared from the router
 	    this.url = this.urlRoot + "/" + postId;
 	}
 });

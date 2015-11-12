@@ -14,23 +14,23 @@ app.Views.Pagination = Backbone.View.extend({
 		var range = 5;
 		var perPage = 6;
 
-		var numOfPages = Math.ceil(options.totalRecords / perPage); // 13 / 6 = 3
-		var currentLinkNumber = options.currentLinkNumber; // 1
+		var numOfPages = Math.ceil(options.totalRecords / perPage); 
+		var currentLinkNumber = options.currentLinkNumber; 
 
-	    var rangeMin = (range % 2 == 0) ? (range / 2) - 1 : (range - 1) / 2;  // false 3
-	    var rangeMax = (range % 2 == 0) ? rangeMin + 1 : rangeMin;  // false 3
-	    var pageMin = currentLinkNumber - rangeMin;  // 1 - 3 = -2
-	    var pageMax = currentLinkNumber + rangeMax;  // 1 + 3 = 4
+	    var rangeMin = (range % 2 == 0) ? (range / 2) - 1 : (range - 1) / 2;  
+	    var rangeMax = (range % 2 == 0) ? rangeMin + 1 : rangeMin; 
+	    var pageMin = currentLinkNumber - rangeMin;  
+	    var pageMax = currentLinkNumber + rangeMax;  
 
-	    pageMin = (pageMin < 1) ? 1 : pageMin; // true 1
-	    pageMax = (pageMax < (pageMin + range - 1)) ? pageMin + range - 1 : pageMax; // true 5
+	    pageMin = (pageMin < 1) ? 1 : pageMin; 
+	    pageMax = (pageMax < (pageMin + range - 1)) ? pageMin + range - 1 : pageMax; 
 
-	    if (pageMax > numOfPages) { // true
-	        pageMin = (pageMin > 1) ? numOfPages - range + 1 : 1; // false 1
-	        pageMax = numOfPages; // 3
+	    if (pageMax > numOfPages) { 
+	        pageMin = (pageMin > 1) ? numOfPages - range + 1 : 1; 
+	        pageMax = numOfPages; 
 	    }
 
-    	pageMin = (pageMin < 1) ? 1 : pageMin; // false 1
+    	pageMin = (pageMin < 1) ? 1 : pageMin; 
 
     	this.numOfPages = numOfPages;
     	this.currentLinkNumber = currentLinkNumber;

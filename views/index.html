@@ -74,11 +74,24 @@
 	</div>
 	<div class="clearfix"></div><br/>
 	<div>
-		<div><span class="badge"><%= post.comments.length %> Comments</span> </div>
+		<div>
+			<span class="badge">
+				<% if (post.commentCount == 0) { %>
+					No Comments
+				<% } else { %>
+					<%= post.commentCount %>
+					<% if (post.commentCount == 1) 	{ %>
+						Comment
+					<% } else { %>
+						Comments 
+					<% } %>
+				<% } %>		
+			</span> 
+		</div>
 		<br/>
 		<div class="post-content-wrapper"><%= post.content %></div>
 	</div>
-	<div class="read-more-wrapper"><a class="read-more-btn" href="#posts/view/<%= post.slug %>">... Read more</a></div>
+	<div class="read-more-wrapper"><a class="btn btn-primary" href="#posts/view/<%= post.slug %>">Read more</a></div>
 </script>
 
 <script id="post-view-template" type="text/template">
@@ -238,7 +251,6 @@
 <!-- Libraries -->
 <script src="/js/lib/jquery.js"></script>	
 <script src="/js/lib/moment.js"></script>	
-<script src="/js/lib/js.cookie.js"></script>
 <script src="/js/lib/bootstrap.js"></script>
 <script src="/js/lib/underscore.js"></script>		
 <script src="/js/lib/backbone.js"></script>	

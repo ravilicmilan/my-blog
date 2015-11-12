@@ -31,15 +31,15 @@ var app = {
 	},
 
 	getToken: function() {
-		return Cookies.get('token');
+		return localStorage.getItem('token');
 	},
 
 	setToken: function(token) {
-		Cookies.set('token', token);
+		localStorage.setItem('token', token);
 	},
 
 	removeToken: function() {
-		Cookies.set('token', '');
+		localStorage.setItem('token', '');
 	},
 
 	Auth: {
